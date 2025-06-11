@@ -6,10 +6,10 @@
 
     <mat-card-content>
       <section class="categories-section">
-        <h2>Categories</h2>
+        <h2>Creacion de categorías</h2>
         <div class="form-container">
           <mat-form-field appearance="outline">
-            <mat-label>New Category</mat-label>
+            <mat-label>Nueva categoría</mat-label>
             <input
               matInput
               [(ngModel)]="newCategoryName"
@@ -18,7 +18,7 @@
           </mat-form-field>
           <button mat-raised-button color="primary" (click)="addCategory()">
             <mat-icon>add</mat-icon>
-            Add Category
+            Agregar categoría
           </button>
         </div>
 
@@ -35,10 +35,10 @@
       <mat-divider></mat-divider>
 
       <section class="tasks-section">
-        <h2>Tasks</h2>
+        <h2>Creacion de tareas</h2>
         <div class="form-container">
           <mat-form-field appearance="outline">
-            <mat-label>New Task</mat-label>
+            <mat-label>Nueva tarea</mat-label>
             <input
               matInput
               [(ngModel)]="newTaskTitle"
@@ -47,9 +47,9 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Category</mat-label>
+            <mat-label>Categorías</mat-label>
             <mat-select [(ngModel)]="selectedCategory">
-              <mat-option value="all">All Categories</mat-option>
+              <mat-option value="all">Sin categoría</mat-option>
               <mat-option
                 *ngFor="let category of categories"
                 [value]="category.id"
@@ -61,13 +61,18 @@
 
           <button mat-raised-button color="accent" (click)="addTask()">
             <mat-icon>add_task</mat-icon>
-            Add Task
+            Agregar tarea
           </button>
         </div>
+      </section>
 
+      <mat-divider></mat-divider>
+
+      <section class="categories-section">
+        <h2>Filtro de tareas</h2>
         <div class="search-filter-container">
           <mat-form-field appearance="outline">
-            <mat-label>Search tasks</mat-label>
+            <mat-label>Buscar tarea</mat-label>
             <input
               matInput
               [(ngModel)]="searchText"
@@ -78,12 +83,11 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Filter by category</mat-label>
             <mat-select
               [(ngModel)]="filterCategory"
               (selectionChange)="applyFilters()"
             >
-              <mat-option value="all">All Categories</mat-option>
+              <mat-option value="all">Todas las categorías</mat-option>
               <mat-option
                 *ngFor="let category of categories"
                 [value]="category.id"
@@ -93,30 +97,31 @@
             </mat-select>
           </mat-form-field>
         </div>
+      </section>
 
-        <!-- Task List -->
-        <div class="task-list">
-          <mat-card
-            *ngFor="let task of filteredTasks"
-            class="task-card"
-            [class.completed]="task.completed"
-          >
-            <div class="task-content">
-              <mat-checkbox
-                [checked]="task.completed"
-                (change)="toggleTask(task.id)"
-              >
-                <span class="task-title">{{ task.title }}</span>
-              </mat-checkbox>
-              <span class="category-label">
-                {{ getCategoryName(task.categoryId) }}
-              </span>
-            </div>
-            <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </mat-card>
-        </div>
+      <mat-divider></mat-divider>
+
+      <section class="task-list">
+        <mat-card
+          *ngFor="let task of filteredTasks"
+          class="task-card"
+          [class.completed]="task.completed"
+        >
+          <div class="task-content">
+            <mat-checkbox
+              [checked]="task.completed"
+              (change)="toggleTask(task.id)"
+            >
+              <span class="task-title">{{ task.title }}</span>
+            </mat-checkbox>
+            <span class="category-label">
+              {{ getCategoryName(task.categoryId) }}
+            </span>
+          </div>
+          <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card>
       </section>
     </mat-card-content>
   </mat-card>

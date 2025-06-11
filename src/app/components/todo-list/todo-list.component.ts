@@ -55,8 +55,12 @@ export class TodoListComponent implements OnInit {
   }
 
   addTask(): void {
-    if (this.newTaskTitle.trim() && this.selectedCategory !== 'all') {
-      this.todoService.addTask(this.newTaskTitle, this.selectedCategory);
+    if (this.newTaskTitle.trim()) {
+      const categoryId =
+        this.selectedCategory === 'all'
+          ? 'sin-categoria'
+          : this.selectedCategory;
+      this.todoService.addTask(this.newTaskTitle, categoryId);
       this.newTaskTitle = '';
       this.loadAllTasks(); // Cargar todas las tareas sin filtrar
     }
