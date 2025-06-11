@@ -16,6 +16,12 @@
               placeholder="Category name"
             />
           </mat-form-field>
+
+          <mat-form-field appearance="outline" *ngIf="categoryColorsEnabled">
+            <mat-label>Color</mat-label>
+            <input matInput [(ngModel)]="newCategoryColor" type="color" />
+          </mat-form-field>
+
           <button mat-raised-button color="primary" (click)="addCategory()">
             <mat-icon>add</mat-icon>
             Agregar categoría
@@ -23,7 +29,12 @@
         </div>
 
         <mat-chip-listbox class="category-list">
-          <mat-chip *ngFor="let category of categories">
+          <mat-chip
+            *ngFor="let category of categories"
+            [style.background-color]="
+              categoryColorsEnabled && category.color ? category.color : null
+            "
+          >
             {{ category.name }}
             <button matChipRemove (click)="deleteCategory(category.id)">
               <mat-icon>cancel</mat-icon>
@@ -106,6 +117,10 @@
           *ngFor="let task of filteredTasks"
           class="task-card"
           [class.completed]="task.completed"
+          [class.with-category-color]="categoryColorsEnabled"
+          [style.borderLeftColor]="
+            categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
+          "
         >
           <div class="task-content">
             <mat-checkbox
@@ -114,7 +129,13 @@
             >
               <span class="task-title">{{ task.title }}</span>
             </mat-checkbox>
-            <span class="category-label">
+            <span
+              class="category-label"
+              [class.with-color]="categoryColorsEnabled"
+              [style.backgroundColor]="
+                categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
+              "
+            >
               {{ getCategoryName(task.categoryId) }}
             </span>
           </div>

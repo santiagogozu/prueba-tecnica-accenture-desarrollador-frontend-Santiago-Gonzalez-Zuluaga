@@ -98,6 +98,10 @@
         }
       }
 
+      &.with-category-color {
+        border-left: 4px solid;
+      }
+
       .task-content {
         display: flex;
         align-items: center;
@@ -111,6 +115,13 @@
           padding: 2px 8px;
           border-radius: 12px;
           margin-left: auto;
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-size: 12px;
+
+          &.with-color {
+            color: white;
+          }
         }
       }
     }

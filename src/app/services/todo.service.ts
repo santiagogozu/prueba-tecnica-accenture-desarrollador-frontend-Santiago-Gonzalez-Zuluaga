@@ -68,12 +68,13 @@ export class TodoService {
     this.saveToLocalStorage();
   }
 
-  addCategory(name: string): void {
+  addCategory(name: string, color?: string): void {
     if (!name.trim()) return;
 
     const category: Category = {
       id: Date.now().toString(),
       name,
+      color,
     };
     this.categories.next([...this.categories.value, category]);
     this.saveToLocalStorage();

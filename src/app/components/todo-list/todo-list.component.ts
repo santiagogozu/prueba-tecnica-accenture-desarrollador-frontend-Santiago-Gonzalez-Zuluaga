@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { TodoService } from '../../services/todo.service';
+import { FeatureFlagsService } from '../../services/feature-flags.service';
 import { Task, Category } from '../../models/todo.model';
 
 @Component({
@@ -40,8 +41,12 @@ export class TodoListComponent implements OnInit {
   filteredTasks: Task[] = [];
   searchText = '';
   filterCategory = 'all';
+  categoryColorsEnabled = false;
 
-  constructor(private todoService: TodoService) {}
+  constructor(
+    private todoService: TodoService,
+    private featureFlagsService: FeatureFlagsService
+  ) {}
 
   ngOnInit(): void {
     this.todoService.getTasks().subscribe((tasks) => {
@@ -51,6 +56,10 @@ export class TodoListComponent implements OnInit {
 
     this.todoService.getCategories().subscribe((categories) => {
       this.categories = categories;
+    });
+
+    this.featureFlagsService.isCategoryColorsEnabled().subscribe((enabled) => {
+      this.categoryColorsEnabled = enabled;
     });
   }
 
@@ -68,7 +77,11 @@ export class TodoListComponent implements OnInit {
 
   addCategory(): void {
     if (this.newCategoryName.trim()) {
-      this.todoService.addCategory(this.newCategoryName);
+      const category = {
+        name: this.newCategoryName,
+        color: this.categoryColorsEnabled ? this.newCategoryColor : undefined,
+      };
+      this.todoService.addCategory(this.newCategoryName, category.color);
       this.newCategoryName = '';
       this.newCategoryColor = '#000000';
     }
@@ -109,5 +122,18 @@ export class TodoListComponent implements OnInit {
   getCategoryName(categoryId: string): string {
     const category = this.categories.find((cat) => cat.id === categoryId);
     return category ? category.name : '';
+  }
+
+  getCategoryStyle(categoryId: string): object {
+    if (!this.categoryColorsEnabled) return {};
+
+    const category = this.categories.find((cat) => cat.id === categoryId);
+    return category?.color ? { 'background-color': category.color } : {};
+  }
+
+  getCategoryColor(categoryId: string): string | null {
+    if (!this.categoryColorsEnabled) return null;
+    const category = this.categories.find((cat) => cat.id === categoryId);
+    return category?.color || null;
   }
 }
