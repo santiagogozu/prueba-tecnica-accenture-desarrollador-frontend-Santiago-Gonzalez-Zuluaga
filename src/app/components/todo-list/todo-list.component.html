@@ -1,0 +1,104 @@
+<div class="todo-container">
+  <mat-card class="main-card">
+    <mat-card-header>
+      <mat-card-title>Todo List</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Categories Section -->
+      <section class="categories-section">
+        <h2>Categories</h2>
+        <div class="form-container">
+          <mat-form-field appearance="outline">
+            <mat-label>New Category</mat-label>
+            <input
+              matInput
+              [(ngModel)]="newCategoryName"
+              placeholder="Category name"
+            />
+          </mat-form-field>
+
+          <!-- <input
+            type="color"
+            [(ngModel)]="newCategoryColor"
+            class="color-picker"
+          /> -->
+
+          <button mat-raised-button color="primary" (click)="addCategory()">
+            <mat-icon>add</mat-icon>
+            Add Category
+          </button>
+        </div>
+
+        <mat-chip-listbox class="category-list">
+          <mat-chip
+            *ngFor="let category of categories"
+            [style.backgroundColor]="category.color + '20'"
+            [style.color]="category.color"
+          >
+            {{ category.name }}
+            <button matChipRemove (click)="deleteCategory(category.id)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </mat-chip-listbox>
+      </section>
+
+      <mat-divider></mat-divider>
+
+      <!-- Tasks Section -->
+      <section class="tasks-section">
+        <h2>Tasks</h2>
+        <div class="form-container">
+          <mat-form-field appearance="outline">
+            <mat-label>New Task</mat-label>
+            <input
+              matInput
+              [(ngModel)]="newTaskTitle"
+              placeholder="Task description"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select
+              [(ngModel)]="selectedCategory"
+              (selectionChange)="onCategoryChange()"
+            >
+              <mat-option value="all">All Categories</mat-option>
+              <mat-option
+                *ngFor="let category of categories"
+                [value]="category.id"
+              >
+                {{ category.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="accent" (click)="addTask()">
+            <mat-icon>add_task</mat-icon>
+            Add Task
+          </button>
+        </div>
+
+        <div class="task-list">
+          <mat-card
+            *ngFor="let task of filteredTasks"
+            class="task-card"
+            [class.completed]="task.completed"
+          >
+            <mat-checkbox
+              [checked]="task.completed"
+              (change)="toggleTask(task.id)"
+            >
+              {{ task.title }}
+            </mat-checkbox>
+            <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card>
+        </div>
+      </section>
+    </mat-card-content>
+  </mat-card>
+</div>

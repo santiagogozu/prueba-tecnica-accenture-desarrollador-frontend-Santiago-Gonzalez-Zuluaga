@@ -1,0 +1,132 @@
+// @use "@angular/material" as mat;
+
+.todo-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  .main-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+    mat-card-header {
+      margin-bottom: 2rem;
+
+      mat-card-title {
+        font-size: 2rem;
+        text-align: center;
+        width: 100%;
+      }
+    }
+  }
+
+  section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .form-container {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    mat-form-field {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .color-picker {
+      height: 56px;
+      width: 56px;
+      padding: 0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .category-list {
+    margin: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    mat-chip {
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .task-list {
+    .task-card {
+      margin: 0.5rem 0;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      &.completed {
+        mat-checkbox {
+          text-decoration: line-through;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .todo-container {
+    margin: 1rem;
+
+    .form-container {
+      flex-direction: column;
+
+      mat-form-field {
+        width: 100%;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-card,
+mat-chip {
+  animation: fadeIn 0.3s ease;
+}
