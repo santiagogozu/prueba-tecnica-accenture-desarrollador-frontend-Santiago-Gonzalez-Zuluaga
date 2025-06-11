@@ -18,7 +18,15 @@
               <ion-input
                 label="Nueva categoría"
                 [(ngModel)]="newCategoryName"
-                placeholder="Nombre de categoria"
+                placeholder="Nombre"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input
+                label="Descripción"
+                [(ngModel)]="newCategoryDescription"
+                placeholder="Descripción"
               ></ion-input>
             </ion-item>
 
@@ -32,16 +40,42 @@
 
             <ion-button
               expand="full"
-              (click)="addCategory()"
+              (click)="editingCategory ? updateCategory() : addCategory()"
               class="ion-margin-vertical"
             >
-              <ion-icon slot="start" name="add"></ion-icon>
-              Agregar categoría
+              <ion-icon
+                slot="start"
+                [name]="editingCategory ? 'save' : 'add'"
+              ></ion-icon>
+              {{
+                editingCategory ? "Actualizar categoría" : "Agregar categoría"
+              }}
+            </ion-button>
+
+            <ion-button
+              *ngIf="editingCategory"
+              expand="full"
+              color="medium"
+              (click)="cancelEdit()"
+            >
+              <ion-icon slot="start" name="close"></ion-icon>
+              Cancelar
             </ion-button>
 
             <ion-item-group class="category-list">
               <ion-item *ngFor="let category of categories">
-                <ion-label>{{ category.name }}</ion-label>
+                <ion-label>
+                  <h2>{{ category.name }}</h2>
+                  <p *ngIf="category.description">{{ category.description }}</p>
+                </ion-label>
+                <ion-button
+                  slot="end"
+                  fill="clear"
+                  color="primary"
+                  (click)="startEditingCategory(category)"
+                >
+                  <ion-icon name="create"></ion-icon>
+                </ion-button>
                 <ion-button
                   slot="end"
                   fill="clear"
@@ -65,7 +99,7 @@
               <ion-input
                 label="Nueva tarea"
                 [(ngModel)]="newTaskTitle"
-                placeholder="Descripción de la tarea"
+                placeholder="Descripción"
               ></ion-input>
             </ion-item>
 
@@ -139,7 +173,9 @@
                 [class.completed]="task.completed"
                 [class.with-category-color]="categoryColorsEnabled"
                 [style.borderLeftColor]="
-                  categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
+                  categoryColorsEnabled
+                    ? getCategoryColor(task.categoryId)
+                    : null
                 "
               >
                 <ion-checkbox
@@ -149,15 +185,19 @@
                 ></ion-checkbox>
                 <ion-label>
                   <span class="task-title">{{ task.title }}</span>
-                  <p class="category-name" [style.color]="getCategoryColor(task.categoryId)">
+                  <p
+                    class="category-name"
+                    [style.color]="getCategoryColor(task.categoryId)"
+                  >
                     {{ getCategoryName(task.categoryId) || "Sin categoría" }}
                   </p>
                 </ion-label>
-                <ion-button 
-                  slot="end" 
-                  fill="clear" 
-                  color="danger" 
-                  (click)="deleteTask(task.id)">
+                <ion-button
+                  slot="end"
+                  fill="clear"
+                  color="danger"
+                  (click)="deleteTask(task.id)"
+                >
                   <ion-icon name="trash"></ion-icon>
                 </ion-button>
               </ion-item>

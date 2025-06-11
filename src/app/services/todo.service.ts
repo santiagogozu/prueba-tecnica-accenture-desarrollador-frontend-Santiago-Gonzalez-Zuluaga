@@ -100,4 +100,13 @@ export class TodoService {
     );
     this.saveToLocalStorage();
   }
+
+  updateCategory(id: string, updates: Partial<Category>): void {
+    const currentCategories = this.categories.getValue();
+    const updatedCategories = currentCategories.map((cat) =>
+      cat.id === id ? { ...cat, ...updates } : cat
+    );
+    this.categories.next(updatedCategories);
+    this.saveToLocalStorage();
+  }
 }

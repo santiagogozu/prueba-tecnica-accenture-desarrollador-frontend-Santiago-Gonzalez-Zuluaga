@@ -1,4 +1,9 @@
-import { Component, OnInit, OnDestroy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
@@ -81,6 +86,8 @@ export class TodoListComponent implements OnInit, OnDestroy {
   isLoading = true;
   private pageSize = 10;
   private destroy$ = new Subject<void>();
+  editingCategory: Category | null = null;
+  newCategoryDescription = '';
 
   constructor(
     private todoService: TodoService,
@@ -99,26 +106,27 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.todoService.getTasks().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(tasks => {
-      this.tasks = tasks;
-      this.applyFilters();
-    });
+    this.todoService
+      .getTasks()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((tasks) => {
+        this.tasks = tasks;
+        this.applyFilters();
+      });
 
-    this.todoService.getCategories().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(categories => {
-      this.categories = categories;
-    });
+    this.todoService
+      .getCategories()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((categories) => {
+        this.categories = categories;
+      });
 
     // Carga inicial optimizada
-    Promise.all([
-      this.loadInitialTasks(),
-      this.loadCategories(),
-    ]).finally(() => {
-      this.isLoading = false;
-    });
+    Promise.all([this.loadInitialTasks(), this.loadCategories()]).finally(
+      () => {
+        this.isLoading = false;
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -139,9 +147,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   private async loadCategories(): Promise<void> {
-    this.categories = await firstValueFrom(
-      this.todoService.getCategories()
-    );
+    this.categories = await firstValueFrom(this.todoService.getCategories());
   }
 
   private async loadRemainingTasks(): Promise<void> {
@@ -182,7 +188,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   deleteTask(taskId: string): void {
     this.todoService.deleteTask(taskId);
-    this.filteredTasks = this.filteredTasks.filter(task => task.id !== taskId);
+    this.filteredTasks = this.filteredTasks.filter(
+      (task) => task.id !== taskId
+    );
   }
 
   deleteCategory(categoryId: string): void {
@@ -225,5 +233,31 @@ export class TodoListComponent implements OnInit, OnDestroy {
     if (!this.categoryColorsEnabled) return null;
     const category = this.categories.find((cat) => cat.id === categoryId);
     return category?.color || null;
+  }
+
+  startEditingCategory(category: Category): void {
+    this.editingCategory = { ...category };
+    this.newCategoryName = category.name;
+    this.newCategoryDescription = category.description || '';
+    this.newCategoryColor = category.color || '#000000';
+  }
+
+  updateCategory(): void {
+    if (!this.editingCategory || !this.newCategoryName.trim()) return;
+
+    this.todoService.updateCategory(this.editingCategory.id, {
+      name: this.newCategoryName,
+      description: this.newCategoryDescription,
+      color: this.categoryColorsEnabled ? this.newCategoryColor : undefined,
+    });
+
+    this.cancelEdit();
+  }
+
+  cancelEdit(): void {
+    this.editingCategory = null;
+    this.newCategoryName = '';
+    this.newCategoryDescription = '';
+    this.newCategoryColor = '#000000';
   }
 }
