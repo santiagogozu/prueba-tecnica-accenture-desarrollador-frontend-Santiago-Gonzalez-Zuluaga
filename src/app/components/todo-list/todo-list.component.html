@@ -139,20 +139,19 @@
                 categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
               "
             >
-              <ion-label
-                [class.with-color]="categoryColorsEnabled"
-                [style.backgroundColor]="
-                  categoryColorsEnabled
-                    ? getCategoryColor(task.categoryId)
-                    : null
-                "
-              >
-                <ion-checkbox
-                  slot="start"
-                  [checked]="task.completed"
-                  (ionChange)="toggleTask(task.id)"
-                ></ion-checkbox>
+              <ion-checkbox
+                slot="start"
+                [checked]="task.completed"
+                (ionChange)="toggleTask(task.id)"
+              ></ion-checkbox>
+              <ion-label>
                 <span class="task-title">{{ task.title }}</span>
+                <p
+                  class="category-name"
+                  [style.color]="getCategoryColor(task.categoryId)"
+                >
+                  {{ getCategoryName(task.categoryId) || "Sin categoría" }}
+                </p>
               </ion-label>
             </ion-item>
             <ion-item-options side="end">
