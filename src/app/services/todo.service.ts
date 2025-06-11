@@ -38,7 +38,13 @@ export class TodoService {
     return this.categories.asObservable();
   }
 
+  getTasksByCategory(categoryId: string): Task[] {
+    return this.tasks.value.filter((task) => task.categoryId === categoryId);
+  }
+
   addTask(title: string, categoryId: string): void {
+    if (!title.trim() || !categoryId) return;
+
     const task: Task = {
       id: Date.now().toString(),
       title,
@@ -63,6 +69,8 @@ export class TodoService {
   }
 
   addCategory(name: string): void {
+    if (!name.trim()) return;
+
     const category: Category = {
       id: Date.now().toString(),
       name,

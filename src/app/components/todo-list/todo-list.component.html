@@ -5,7 +5,6 @@
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Categories Section -->
       <section class="categories-section">
         <h2>Categories</h2>
         <div class="form-container">
@@ -17,13 +16,6 @@
               placeholder="Category name"
             />
           </mat-form-field>
-
-          <!-- <input
-            type="color"
-            [(ngModel)]="newCategoryColor"
-            class="color-picker"
-          /> -->
-
           <button mat-raised-button color="primary" (click)="addCategory()">
             <mat-icon>add</mat-icon>
             Add Category
@@ -31,11 +23,7 @@
         </div>
 
         <mat-chip-listbox class="category-list">
-          <mat-chip
-            *ngFor="let category of categories"
-            [style.backgroundColor]="category.color + '20'"
-            [style.color]="category.color"
-          >
+          <mat-chip *ngFor="let category of categories">
             {{ category.name }}
             <button matChipRemove (click)="deleteCategory(category.id)">
               <mat-icon>cancel</mat-icon>
@@ -46,7 +34,6 @@
 
       <mat-divider></mat-divider>
 
-      <!-- Tasks Section -->
       <section class="tasks-section">
         <h2>Tasks</h2>
         <div class="form-container">
@@ -61,10 +48,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Category</mat-label>
-            <mat-select
-              [(ngModel)]="selectedCategory"
-              (selectionChange)="onCategoryChange()"
-            >
+            <mat-select [(ngModel)]="selectedCategory">
               <mat-option value="all">All Categories</mat-option>
               <mat-option
                 *ngFor="let category of categories"
@@ -81,18 +65,53 @@
           </button>
         </div>
 
+        <div class="search-filter-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Search tasks</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchText"
+              (ngModelChange)="applyFilters()"
+              placeholder="Search..."
+            />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Filter by category</mat-label>
+            <mat-select
+              [(ngModel)]="filterCategory"
+              (selectionChange)="applyFilters()"
+            >
+              <mat-option value="all">All Categories</mat-option>
+              <mat-option
+                *ngFor="let category of categories"
+                [value]="category.id"
+              >
+                {{ category.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Task List -->
         <div class="task-list">
           <mat-card
             *ngFor="let task of filteredTasks"
             class="task-card"
             [class.completed]="task.completed"
           >
-            <mat-checkbox
-              [checked]="task.completed"
-              (change)="toggleTask(task.id)"
-            >
-              {{ task.title }}
-            </mat-checkbox>
+            <div class="task-content">
+              <mat-checkbox
+                [checked]="task.completed"
+                (change)="toggleTask(task.id)"
+              >
+                <span class="task-title">{{ task.title }}</span>
+              </mat-checkbox>
+              <span class="category-label">
+                {{ getCategoryName(task.categoryId) }}
+              </span>
+            </div>
             <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
               <mat-icon>delete</mat-icon>
             </button>

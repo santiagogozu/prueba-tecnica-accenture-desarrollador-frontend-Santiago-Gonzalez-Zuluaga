@@ -38,13 +38,15 @@ export class TodoListComponent implements OnInit {
   newCategoryColor = '#000000';
   selectedCategory = 'all';
   filteredTasks: Task[] = [];
+  searchText = '';
+  filterCategory = 'all';
 
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
     this.todoService.getTasks().subscribe((tasks) => {
       this.tasks = tasks;
-      this.filterTasks();
+      this.filteredTasks = tasks; // Mostrar todas las tareas por defecto
     });
 
     this.todoService.getCategories().subscribe((categories) => {
@@ -56,6 +58,7 @@ export class TodoListComponent implements OnInit {
     if (this.newTaskTitle.trim() && this.selectedCategory !== 'all') {
       this.todoService.addTask(this.newTaskTitle, this.selectedCategory);
       this.newTaskTitle = '';
+      this.loadAllTasks(); // Cargar todas las tareas sin filtrar
     }
   }
 
@@ -79,16 +82,28 @@ export class TodoListComponent implements OnInit {
     this.todoService.deleteCategory(categoryId);
   }
 
-  filterTasks(): void {
-    this.filteredTasks =
-      this.selectedCategory === 'all'
-        ? this.tasks
-        : this.tasks.filter(
-            (task) => task.categoryId === this.selectedCategory
-          );
+  loadAllTasks(): void {
+    this.filteredTasks = this.tasks;
   }
 
-  onCategoryChange(): void {
-    this.filterTasks();
+  applyFilters(): void {
+    let result = [...this.tasks];
+
+    if (this.searchText.trim()) {
+      result = result.filter((task) =>
+        task.title.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    }
+
+    if (this.filterCategory !== 'all') {
+      result = result.filter((task) => task.categoryId === this.filterCategory);
+    }
+
+    this.filteredTasks = result;
+  }
+
+  getCategoryName(categoryId: string): string {
+    const category = this.categories.find((cat) => cat.id === categoryId);
+    return category ? category.name : '';
   }
 }
