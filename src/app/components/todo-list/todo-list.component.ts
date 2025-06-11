@@ -121,7 +121,10 @@ export class TodoListComponent implements OnInit, OnDestroy {
         this.categories = categories;
       });
 
-    // Carga inicial optimizada
+    this.featureFlagsService.isCategoryColorsEnabled().subscribe((enabled) => {
+      this.categoryColorsEnabled = enabled;
+    });
+
     Promise.all([this.loadInitialTasks(), this.loadCategories()]).finally(
       () => {
         this.isLoading = false;
