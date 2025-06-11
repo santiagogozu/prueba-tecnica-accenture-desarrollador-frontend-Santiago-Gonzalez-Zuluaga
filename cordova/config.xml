@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.todo.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Todo App</name>
+    <description>
+        A simple todo application.
+    </description>
+    <author email="dev@todoapp.com" href="http://todoapp.com">
+        Todo App Dev
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="*" />
+    <allow-navigation href="*" />
+    <preference name="scheme" value="file" />
+    <preference name="hostname" value="localhost" />
+    <preference name="AndroidPersistentFileLocation" value="Internal" />
+</widget>
