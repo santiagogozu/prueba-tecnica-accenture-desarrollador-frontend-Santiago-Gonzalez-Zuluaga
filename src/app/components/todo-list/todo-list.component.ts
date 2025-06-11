@@ -1,4 +1,4 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, OnDestroy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
@@ -35,6 +35,8 @@ import {
 import { TodoService } from '../../services/todo.service';
 import { FeatureFlagsService } from '../../services/feature-flags.service';
 import { Task, Category } from '../../models/todo.model';
+import { firstValueFrom } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-todo-list',
@@ -65,7 +67,7 @@ import { Task, Category } from '../../models/todo.model';
     IonItemGroup,
   ],
 })
-export class TodoListComponent implements OnInit {
+export class TodoListComponent implements OnInit, OnDestroy {
   tasks: Task[] = [];
   categories: Category[] = [];
   newTaskTitle = '';
@@ -76,6 +78,9 @@ export class TodoListComponent implements OnInit {
   searchText = '';
   filterCategory = 'all';
   categoryColorsEnabled = false;
+  isLoading = true;
+  private pageSize = 10;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private todoService: TodoService,
@@ -94,18 +99,57 @@ export class TodoListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.todoService.getTasks().subscribe((tasks) => {
+    this.todoService.getTasks().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(tasks => {
       this.tasks = tasks;
-      this.filteredTasks = tasks; // Mostrar todas las tareas por defecto
+      this.applyFilters();
     });
 
-    this.todoService.getCategories().subscribe((categories) => {
+    this.todoService.getCategories().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(categories => {
       this.categories = categories;
     });
 
-    this.featureFlagsService.isCategoryColorsEnabled().subscribe((enabled) => {
-      this.categoryColorsEnabled = enabled;
+    // Carga inicial optimizada
+    Promise.all([
+      this.loadInitialTasks(),
+      this.loadCategories(),
+    ]).finally(() => {
+      this.isLoading = false;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private async loadInitialTasks(): Promise<void> {
+    // Cargar solo las primeras 10 tareas inicialmente
+    const initialTasks = await firstValueFrom(
+      this.todoService.getTasks(0, this.pageSize)
+    );
+    this.tasks = initialTasks;
+    this.filteredTasks = initialTasks;
+
+    // Cargar el resto en segundo plano
+    setTimeout(() => this.loadRemainingTasks(), 2000);
+  }
+
+  private async loadCategories(): Promise<void> {
+    this.categories = await firstValueFrom(
+      this.todoService.getCategories()
+    );
+  }
+
+  private async loadRemainingTasks(): Promise<void> {
+    const remainingTasks = await firstValueFrom(
+      this.todoService.getTasks(this.pageSize)
+    );
+    this.tasks = [...this.tasks, ...remainingTasks];
+    this.applyFilters();
   }
 
   addTask(): void {
@@ -138,6 +182,7 @@ export class TodoListComponent implements OnInit {
 
   deleteTask(taskId: string): void {
     this.todoService.deleteTask(taskId);
+    this.filteredTasks = this.filteredTasks.filter(task => task.id !== taskId);
   }
 
   deleteCategory(categoryId: string): void {

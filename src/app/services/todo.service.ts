@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Task, Category } from '../models/todo.model';
 
 @Injectable({
@@ -30,8 +31,15 @@ export class TodoService {
     localStorage.setItem('categories', JSON.stringify(this.categories.value));
   }
 
-  getTasks(): Observable<Task[]> {
-    return this.tasks.asObservable();
+  getTasks(skip?: number, take?: number): Observable<Task[]> {
+    return this.tasks.asObservable().pipe(
+      map((tasks) => {
+        if (skip === undefined) return tasks;
+        const start = skip;
+        const end = take ? skip + take : undefined;
+        return tasks.slice(start, end);
+      })
+    );
   }
 
   getCategories(): Observable<Category[]> {
@@ -51,7 +59,8 @@ export class TodoService {
       completed: false,
       categoryId,
     };
-    this.tasks.next([...this.tasks.value, task]);
+    const currentTasks = this.tasks.getValue();
+    this.tasks.next([...currentTasks, task]);
     this.saveToLocalStorage();
   }
 
@@ -64,7 +73,8 @@ export class TodoService {
   }
 
   deleteTask(taskId: string): void {
-    this.tasks.next(this.tasks.value.filter((task) => task.id !== taskId));
+    const updatedTasks = this.tasks.value.filter((task) => task.id !== taskId);
+    this.tasks.next(updatedTasks);
     this.saveToLocalStorage();
   }
 
@@ -76,7 +86,8 @@ export class TodoService {
       name,
       color,
     };
-    this.categories.next([...this.categories.value, category]);
+    const currentCategories = this.categories.getValue();
+    this.categories.next([...currentCategories, category]);
     this.saveToLocalStorage();
   }
 

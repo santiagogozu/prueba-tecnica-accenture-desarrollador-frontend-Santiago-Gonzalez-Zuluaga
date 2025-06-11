@@ -1,4 +1,13 @@
-import { Routes } from '@angular/router';
-import { TodoListComponent } from './components/todo-list/todo-list.component';
+import { Routes, PreloadAllModules } from '@angular/router';
 
-export const routes: Routes = [{ path: '', component: TodoListComponent }];
+export const routes: Routes = [
+  {
+    path: 'todo',
+    loadComponent: () =>
+      import('./components/todo-list/todo-list.component').then(
+        (m) => m.TodoListComponent
+      ),
+    data: { preload: true },
+  },
+  { path: '', redirectTo: 'todo', pathMatch: 'full' },
+];
