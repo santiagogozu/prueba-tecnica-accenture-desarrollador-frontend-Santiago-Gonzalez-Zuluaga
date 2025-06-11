@@ -1,59 +1,88 @@
-# PruebaTecnicaSantiagoGonzalez
+# Todo List App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.3.
+Aplicación de lista de tareas desarrollada con Angular y Cordova
 
-## Development server
+## Requisitos Previos
 
-To start a local development server, run:
+- Node.js (v14 o superior)
+- npm (v6 o superior)
+- Android Studio y SDK (para desarrollo Android)
+- Xcode (para desarrollo iOS, solo en macOS)
+- Ionic CLI: `npm install -g @ionic/cli`
+- Cordova: `npm install -g cordova`
 
-```bash
-ng serve
-```
+## Instalación y Configuración Mobile
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+1. Instalar Cordova globalmente:
 
 ```bash
-ng generate --help
+npm install -g cordova
 ```
 
-## Building
-
-To build the project run:
+2. Crear proyecto Cordova:
 
 ```bash
-ng build
+cordova create mobile com.todo.app TodoApp
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+3. Añadir plataforma Android:
 
 ```bash
-ng test
+cd mobile
+cordova platform add android
 ```
 
-## Running end-to-end tests
+## Compilación y Despliegue
 
-For end-to-end (e2e) testing, run:
+1. Construir la aplicación Angular:
 
 ```bash
-ng e2e
+ng build --configuration=production
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+2. Compilar para Android:
 
-## Additional Resources
+```bash
+cd mobile
+cordova build android
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+3. Ejecutar en dispositivo/emulador:
+
+```bash
+cordova run android
+```
+
+4. Limpiar build de Android:
+
+```bash
+cordova clean android
+```
+
+## Comandos Útiles
+
+```bash
+# Ver dispositivos conectados
+adb devices
+
+# Construir en modo debug
+cordova build android --debug
+
+# Construir para producción
+cordova build android --release
+```
+
+## Requisitos del Sistema
+
+### Android
+
+- Android Studio
+- JDK 8 o superior
+- Android SDK
+- Gradle
+
+### iOS
+
+- macOS
+- Xcode 12 o superior
+- iOS Developer Account (para despliegue)
