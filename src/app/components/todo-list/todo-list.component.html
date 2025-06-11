@@ -1,119 +1,109 @@
 <div class="todo-container">
-  <mat-card class="main-card">
-    <mat-card-header>
-      <mat-card-title>Todo List</mat-card-title>
-    </mat-card-header>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Todo List</ion-card-title>
+    </ion-card-header>
 
-    <mat-card-content>
-      <section class="categories-section">
-        <h2>Creacion de categorías</h2>
-        <div class="form-container">
-          <mat-form-field appearance="outline">
-            <mat-label>Nueva categoría</mat-label>
-            <input
-              matInput
-              [(ngModel)]="newCategoryName"
-              placeholder="Category name"
-            />
-          </mat-form-field>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-input
+            label="Nueva categoría"
+            [(ngModel)]="newCategoryName"
+            placeholder="Nombre de categoria"
+          ></ion-input>
+        </ion-item>
 
-          <mat-form-field appearance="outline" *ngIf="categoryColorsEnabled">
-            <mat-label>Color</mat-label>
-            <input matInput [(ngModel)]="newCategoryColor" type="color" />
-          </mat-form-field>
+        <ion-item *ngIf="categoryColorsEnabled">
+          <ion-input
+            label="Color"
+            [(ngModel)]="newCategoryColor"
+            type="color"
+          ></ion-input>
+        </ion-item>
 
-          <button mat-raised-button color="primary" (click)="addCategory()">
-            <mat-icon>add</mat-icon>
-            Agregar categoría
-          </button>
-        </div>
+        <ion-button expand="full" (click)="addCategory()">
+          <ion-icon slot="start" name="add"></ion-icon>
+          Agregar categoría
+        </ion-button>
 
-        <mat-chip-listbox class="category-list">
-          <mat-chip
-            *ngFor="let category of categories"
-            [style.background-color]="
-              categoryColorsEnabled && category.color ? category.color : null
-            "
-          >
-            {{ category.name }}
-            <button matChipRemove (click)="deleteCategory(category.id)">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip>
-        </mat-chip-listbox>
-      </section>
-
-      <mat-divider></mat-divider>
-
-      <section class="tasks-section">
-        <h2>Creacion de tareas</h2>
-        <div class="form-container">
-          <mat-form-field appearance="outline">
-            <mat-label>Nueva tarea</mat-label>
-            <input
-              matInput
-              [(ngModel)]="newTaskTitle"
-              placeholder="Task description"
-            />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Categorías</mat-label>
-            <mat-select [(ngModel)]="selectedCategory">
-              <mat-option value="all">Sin categoría</mat-option>
-              <mat-option
-                *ngFor="let category of categories"
-                [value]="category.id"
-              >
-                {{ category.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <button mat-raised-button color="accent" (click)="addTask()">
-            <mat-icon>add_task</mat-icon>
-            Agregar tarea
-          </button>
-        </div>
-      </section>
-
-      <mat-divider></mat-divider>
-
-      <section class="categories-section">
-        <h2>Filtro de tareas</h2>
-        <div class="search-filter-container">
-          <mat-form-field appearance="outline">
-            <mat-label>Buscar tarea</mat-label>
-            <input
-              matInput
-              [(ngModel)]="searchText"
-              (ngModelChange)="applyFilters()"
-              placeholder="Search..."
-            />
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-select
-              [(ngModel)]="filterCategory"
-              (selectionChange)="applyFilters()"
+        <ion-item-group class="category-list">
+          <ion-item *ngFor="let category of categories">
+            <ion-label>{{ category.name }}</ion-label>
+            <ion-button
+              slot="end"
+              fill="clear"
+              color="danger"
+              (click)="deleteCategory(category.id)"
             >
-              <mat-option value="all">Todas las categorías</mat-option>
-              <mat-option
-                *ngFor="let category of categories"
-                [value]="category.id"
-              >
-                {{ category.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </section>
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-item-group>
+      </ion-list>
 
-      <mat-divider></mat-divider>
+      <ion-list>
+        <ion-item>
+          <ion-input
+            label="Nueva tarea"
+            [(ngModel)]="newTaskTitle"
+            placeholder="Descripción de la tarea"
+          ></ion-input>
+        </ion-item>
 
-      <section class="task-list">
-        <mat-card
+        <ion-item>
+          <ion-select
+            label="Categorías"
+            [(ngModel)]="selectedCategory"
+            interface="popover"
+          >
+            <ion-select-option value="all">Sin categoría</ion-select-option>
+            <ion-select-option
+              *ngFor="let category of categories"
+              [value]="category.id"
+            >
+              {{ category.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button expand="full" (click)="addTask()">
+          <ion-icon slot="start" name="add-task"></ion-icon>
+          Agregar tarea
+        </ion-button>
+      </ion-list>
+
+      <ion-list>
+        <ion-item>
+          <ion-input
+            label="Buscar tarea"
+            [(ngModel)]="searchText"
+            (ngModelChange)="applyFilters()"
+            placeholder="Search..."
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-select
+            [(ngModel)]="filterCategory"
+            (ionChange)="applyFilters()"
+            interface="popover"
+          >
+            <ion-select-option value="all"
+              >Todas las categorías</ion-select-option
+            >
+            <ion-select-option
+              *ngFor="let category of categories"
+              [value]="category.id"
+            >
+              {{ category.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+
+      <ion-list class="task-list">
+        <ion-item
           *ngFor="let task of filteredTasks"
           class="task-card"
           [class.completed]="task.completed"
@@ -122,28 +112,29 @@
             categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
           "
         >
-          <div class="task-content">
-            <mat-checkbox
+          <ion-label
+            [class.with-color]="categoryColorsEnabled"
+            [style.backgroundColor]="
+              categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
+            "
+          >
+            <ion-checkbox
+              slot="start"
               [checked]="task.completed"
-              (change)="toggleTask(task.id)"
-            >
-              <span class="task-title">{{ task.title }}</span>
-            </mat-checkbox>
-            <span
-              class="category-label"
-              [class.with-color]="categoryColorsEnabled"
-              [style.backgroundColor]="
-                categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
-              "
-            >
-              {{ getCategoryName(task.categoryId) }}
-            </span>
-          </div>
-          <button mat-icon-button color="warn" (click)="deleteTask(task.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-card>
-      </section>
-    </mat-card-content>
-  </mat-card>
+              (ionChange)="toggleTask(task.id)"
+            ></ion-checkbox>
+            <span class="task-title">{{ task.title }}</span>
+          </ion-label>
+          <ion-button
+            slot="end"
+            fill="clear"
+            color="danger"
+            (click)="deleteTask(task.id)"
+          >
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </div>

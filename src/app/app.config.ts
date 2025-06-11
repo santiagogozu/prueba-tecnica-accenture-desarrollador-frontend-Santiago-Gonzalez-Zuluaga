@@ -1,5 +1,6 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideIonicAngular } from '@ionic/angular/standalone';
 import { routes } from './app.routes';
 import { initializeApp } from '@angular/fire/app';
 import { getRemoteConfig } from '@angular/fire/remote-config';
@@ -17,6 +18,7 @@ remoteConfig.defaultConfig = {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+    provideIonicAngular(),
     provideFirebaseApp(() => app),
     provideRemoteConfig(() => remoteConfig),
   ],

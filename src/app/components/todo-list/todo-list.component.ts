@@ -1,14 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
+import {
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonList,
+  IonItem,
+  IonInput,
+  IonButton,
+  IonIcon,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonCheckbox,
+  IonItemGroup,
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { search, trash, add, addCircle } from 'ionicons/icons';
 import { TodoService } from '../../services/todo.service';
 import { FeatureFlagsService } from '../../services/feature-flags.service';
 import { Task, Category } from '../../models/todo.model';
@@ -21,14 +32,21 @@ import { Task, Category } from '../../models/todo.model';
   imports: [
     CommonModule,
     FormsModule,
-    MatCardModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatChipsModule,
-    MatDividerModule,
+    IonContent,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonList,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonIcon,
+    IonLabel,
+    IonSelect,
+    IonSelectOption,
+    IonCheckbox,
+    IonItemGroup,
   ],
 })
 export class TodoListComponent implements OnInit {
@@ -46,7 +64,14 @@ export class TodoListComponent implements OnInit {
   constructor(
     private todoService: TodoService,
     private featureFlagsService: FeatureFlagsService
-  ) {}
+  ) {
+    addIcons({
+      search: search,
+      trash: trash,
+      add: add,
+      'add-task': addCircle,
+    });
+  }
 
   ngOnInit(): void {
     this.todoService.getTasks().subscribe((tasks) => {
