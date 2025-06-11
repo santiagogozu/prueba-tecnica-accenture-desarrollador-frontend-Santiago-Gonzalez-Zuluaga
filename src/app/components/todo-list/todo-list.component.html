@@ -5,136 +5,164 @@
     </ion-card-header>
 
     <ion-card-content>
-      <ion-list>
-        <ion-item>
-          <ion-input
-            label="Nueva categoría"
-            [(ngModel)]="newCategoryName"
-            placeholder="Nombre de categoria"
-          ></ion-input>
-        </ion-item>
-
-        <ion-item *ngIf="categoryColorsEnabled">
-          <ion-input
-            label="Color"
-            [(ngModel)]="newCategoryColor"
-            type="color"
-          ></ion-input>
-        </ion-item>
-
-        <ion-button expand="full" (click)="addCategory()">
-          <ion-icon slot="start" name="add"></ion-icon>
-          Agregar categoría
-        </ion-button>
-
-        <ion-item-group class="category-list">
-          <ion-item *ngFor="let category of categories">
-            <ion-label>{{ category.name }}</ion-label>
-            <ion-button
-              slot="end"
-              fill="clear"
-              color="danger"
-              (click)="deleteCategory(category.id)"
-            >
-              <ion-icon name="trash"></ion-icon>
-            </ion-button>
+      <div class="section-card categories-section">
+        <h2 class="section-title">
+          <ion-icon name="bookmark"></ion-icon>
+          Categorías
+        </h2>
+        <ion-list>
+          <ion-item>
+            <ion-input
+              label="Nueva categoría"
+              [(ngModel)]="newCategoryName"
+              placeholder="Nombre de categoria"
+            ></ion-input>
           </ion-item>
-        </ion-item-group>
-      </ion-list>
 
-      <ion-list>
-        <ion-item>
-          <ion-input
-            label="Nueva tarea"
-            [(ngModel)]="newTaskTitle"
-            placeholder="Descripción de la tarea"
-          ></ion-input>
-        </ion-item>
+          <ion-item *ngIf="categoryColorsEnabled">
+            <ion-input
+              label="Color"
+              [(ngModel)]="newCategoryColor"
+              type="color"
+            ></ion-input>
+          </ion-item>
 
-        <ion-item>
-          <ion-select
-            label="Categorías"
-            [(ngModel)]="selectedCategory"
-            interface="popover"
-          >
-            <ion-select-option value="all">Sin categoría</ion-select-option>
-            <ion-select-option
-              *ngFor="let category of categories"
-              [value]="category.id"
-            >
-              {{ category.name }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-
-        <ion-button expand="full" (click)="addTask()">
-          <ion-icon slot="start" name="add-task"></ion-icon>
-          Agregar tarea
-        </ion-button>
-      </ion-list>
-
-      <ion-list>
-        <ion-item>
-          <ion-input
-            label="Buscar tarea"
-            [(ngModel)]="searchText"
-            (ngModelChange)="applyFilters()"
-            placeholder="Search..."
-          ></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-select
-            [(ngModel)]="filterCategory"
-            (ionChange)="applyFilters()"
-            interface="popover"
-          >
-            <ion-select-option value="all"
-              >Todas las categorías</ion-select-option
-            >
-            <ion-select-option
-              *ngFor="let category of categories"
-              [value]="category.id"
-            >
-              {{ category.name }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-      </ion-list>
-
-      <ion-list class="task-list">
-        <ion-item
-          *ngFor="let task of filteredTasks"
-          class="task-card"
-          [class.completed]="task.completed"
-          [class.with-category-color]="categoryColorsEnabled"
-          [style.borderLeftColor]="
-            categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
-          "
-        >
-          <ion-label
-            [class.with-color]="categoryColorsEnabled"
-            [style.backgroundColor]="
-              categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
-            "
-          >
-            <ion-checkbox
-              slot="start"
-              [checked]="task.completed"
-              (ionChange)="toggleTask(task.id)"
-            ></ion-checkbox>
-            <span class="task-title">{{ task.title }}</span>
-          </ion-label>
           <ion-button
-            slot="end"
-            fill="clear"
-            color="danger"
-            (click)="deleteTask(task.id)"
+            expand="full"
+            (click)="addCategory()"
+            class="ion-margin-vertical"
           >
-            <ion-icon name="trash"></ion-icon>
+            <ion-icon slot="start" name="add"></ion-icon>
+            Agregar categoría
           </ion-button>
-        </ion-item>
-      </ion-list>
+
+          <ion-item-group class="category-list">
+            <ion-item *ngFor="let category of categories">
+              <ion-label>{{ category.name }}</ion-label>
+              <ion-button
+                slot="end"
+                fill="clear"
+                color="danger"
+                (click)="deleteCategory(category.id)"
+              >
+                <ion-icon name="trash"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+      </div>
+
+      <div class="section-card tasks-section">
+        <h2 class="section-title">
+          <ion-icon name="create"></ion-icon>
+          Nueva Tarea
+        </h2>
+        <ion-list>
+          <ion-item>
+            <ion-input
+              label="Nueva tarea"
+              [(ngModel)]="newTaskTitle"
+              placeholder="Descripción de la tarea"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-select
+              label="Categorías"
+              [(ngModel)]="selectedCategory"
+              interface="popover"
+            >
+              <ion-select-option value="all">Sin categoría</ion-select-option>
+              <ion-select-option
+                *ngFor="let category of categories"
+                [value]="category.id"
+              >
+                {{ category.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-button expand="full" (click)="addTask()">
+            <ion-icon slot="start" name="add-task"></ion-icon>
+            Agregar tarea
+          </ion-button>
+        </ion-list>
+      </div>
+
+      <div class="section-card filters-section">
+        <h2 class="section-title">
+          <ion-icon name="filter"></ion-icon>
+          Filtros
+        </h2>
+        <ion-list>
+          <ion-item>
+            <ion-input
+              label="Buscar tarea"
+              [(ngModel)]="searchText"
+              (ngModelChange)="applyFilters()"
+              placeholder="Search..."
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-select
+              [(ngModel)]="filterCategory"
+              (ionChange)="applyFilters()"
+              interface="popover"
+            >
+              <ion-select-option value="all"
+                >Todas las categorías</ion-select-option
+              >
+              <ion-select-option
+                *ngFor="let category of categories"
+                [value]="category.id"
+              >
+                {{ category.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <div class="section-card task-list-section">
+        <h2 class="section-title">
+          <ion-icon name="list"></ion-icon>
+          Tareas
+        </h2>
+        <ion-list class="task-list">
+          <ion-item-sliding *ngFor="let task of filteredTasks">
+            <ion-item
+              class="task-card"
+              [class.completed]="task.completed"
+              [class.with-category-color]="categoryColorsEnabled"
+              [style.borderLeftColor]="
+                categoryColorsEnabled ? getCategoryColor(task.categoryId) : null
+              "
+            >
+              <ion-label
+                [class.with-color]="categoryColorsEnabled"
+                [style.backgroundColor]="
+                  categoryColorsEnabled
+                    ? getCategoryColor(task.categoryId)
+                    : null
+                "
+              >
+                <ion-checkbox
+                  slot="start"
+                  [checked]="task.completed"
+                  (ionChange)="toggleTask(task.id)"
+                ></ion-checkbox>
+                <span class="task-title">{{ task.title }}</span>
+              </ion-label>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="deleteTask(task.id)">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </div>
     </ion-card-content>
   </ion-card>
 </div>

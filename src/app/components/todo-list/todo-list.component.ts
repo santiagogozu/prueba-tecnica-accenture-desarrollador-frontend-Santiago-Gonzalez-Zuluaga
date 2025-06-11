@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
@@ -9,6 +9,9 @@ import {
   IonCardContent,
   IonList,
   IonItem,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
   IonInput,
   IonButton,
   IonIcon,
@@ -19,7 +22,16 @@ import {
   IonItemGroup,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { search, trash, add, addCircle } from 'ionicons/icons';
+import {
+  bookmark,
+  create,
+  filter,
+  list,
+  search,
+  trash,
+  add,
+  addCircle,
+} from 'ionicons/icons';
 import { TodoService } from '../../services/todo.service';
 import { FeatureFlagsService } from '../../services/feature-flags.service';
 import { Task, Category } from '../../models/todo.model';
@@ -29,16 +41,20 @@ import { Task, Category } from '../../models/todo.model';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.scss'],
   standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
     FormsModule,
-    IonContent,
+    // IonContent,
     IonCard,
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
     IonList,
     IonItem,
+    IonItemSliding,
+    IonItemOptions,
+    IonItemOption,
     IonInput,
     IonButton,
     IonIcon,
@@ -66,9 +82,13 @@ export class TodoListComponent implements OnInit {
     private featureFlagsService: FeatureFlagsService
   ) {
     addIcons({
-      search: search,
-      trash: trash,
-      add: add,
+      bookmark,
+      create,
+      filter,
+      list,
+      search,
+      trash,
+      add,
       'add-task': addCircle,
     });
   }
