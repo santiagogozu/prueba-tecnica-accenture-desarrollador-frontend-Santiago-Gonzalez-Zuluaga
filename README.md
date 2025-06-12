@@ -80,9 +80,3 @@ cordova build android --release
 - JDK 8 o superior
 - Android SDK
 - Gradle
-
-### iOS
-
-- macOS
-- Xcode 12 o superior
-- iOS Developer Account (para despliegue)
