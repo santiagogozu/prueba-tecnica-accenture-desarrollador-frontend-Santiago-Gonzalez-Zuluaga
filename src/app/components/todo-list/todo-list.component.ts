@@ -77,7 +77,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   newTaskTitle = '';
   newCategoryName = '';
-  newCategoryColor = '#000000';
+  newCategoryColor = ''; // Cambiar inicialización de null a cadena vacía
   selectedCategory = 'all';
   filteredTasks: Task[] = [];
   searchText = '';
@@ -175,14 +175,21 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   addCategory(): void {
     if (this.newCategoryName.trim()) {
-      const category = {
+      const newCategory: Category = {
+        id: this.generateUniqueId(), // Método para generar un ID único
         name: this.newCategoryName,
-        color: this.categoryColorsEnabled ? this.newCategoryColor : undefined,
+        description: this.newCategoryDescription,
+        color: this.newCategoryColor || undefined, // Asegurar compatibilidad con el tipo
       };
-      this.todoService.addCategory(this.newCategoryName, category.color);
-      this.newCategoryName = '';
-      this.newCategoryColor = '#000000';
+      this.categories.push(newCategory);
+      this.resetCategoryForm(); // Método para limpiar el formulario
     }
+  }
+
+  resetCategoryForm(): void {
+    this.newCategoryName = '';
+    this.newCategoryDescription = '';
+    this.newCategoryColor = ''; // Cambiar null por cadena vacía
   }
 
   toggleTask(taskId: string): void {
@@ -262,5 +269,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
     this.newCategoryName = '';
     this.newCategoryDescription = '';
     this.newCategoryColor = '#000000';
+  }
+
+  private generateUniqueId(): string {
+    return Math.random().toString(36).substr(2, 9); // Generar un ID único
   }
 }
