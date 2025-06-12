@@ -147,13 +147,11 @@ button:hover {
   background-color: #ff6b81;
 }
 
-/* Estilos para los estados de las tareas */
 .task-item.completed span {
   text-decoration: line-through;
   color: #a4b0be;
 }
 
-/* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -163,7 +161,6 @@ button:hover {
   animation: fadeIn 0.3s ease;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .container {
     margin: 1rem;
